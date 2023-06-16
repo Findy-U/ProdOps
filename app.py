@@ -3,6 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
 from dotenv import load_dotenv
+from datetime import datetime
+import requests
+import http.client as http_client
+http_client.HTTPConnection.debuglevel = 1
 
 load_dotenv()
 
@@ -14,78 +18,52 @@ db = SQLAlchemy(app)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 class AllData(db.Model):
     record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    action = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    closed_at = db.Column(db.DateTime, nullable=True)
     project_card_id = db.Column(db.Text)
-    project_card_node_id = db.Column(db.Text)
-    project_card_note = db.Column(db.Text)
-    creator_id = db.Column(db.Integer)
-    creator_login = db.Column(db.Text)
-    changes_note_from = db.Column(db.Text)
-    previous_projects_v2_item_node_id_from = db.Column(db.Text)
-    previous_projects_v2_item_node_id_to = db.Column(db.Text)
-
+    status = db.Column(db.Text)
+    assignee = db.Column(db.Text)  # New column for the assignee
 
 def process_webhook(data):
     try:
-        action = data.get('action')
-        if action == 'edited':
-            projects_v2_item = data.get('projects_v2_item', {})
-            creator = projects_v2_item.get('creator', {})
+        issue = data.get('issue')
+        if issue:
+            project_card_id = str(issue.get('id'))  # convert to string
+            status = issue.get('state')
 
-            mapped_data = {
-                'action': action,
-                'project_card_id': projects_v2_item.get('id'),
-                'project_card_node_id': projects_v2_item.get('node_id'),
-                'project_card_note': None,  # Set the appropriate values if needed
-                'creator_id': creator.get('id') if creator else None,
-                'creator_login': creator.get('login') if creator else None,
-                'changes_note_from': None,  # Set the appropriate values if needed
-                'previous_projects_v2_item_node_id_from': None,  # Set the appropriate values if needed
-                'previous_projects_v2_item_node_id_to': None  # Set the appropriate values if needed
-            }
+            # Get the assignee information
+            assignee = issue.get('assignee')
+            assignee_login = assignee.get('login') if assignee else None  # Handle case where assignee might be None
 
-            # Create a new AllData object and add it to the session
-            all_data = AllData(**mapped_data)
-            db.session.add(all_data)
+            created_at = datetime.strptime(issue.get('created_at'), "%Y-%m-%dT%H:%M:%SZ")
+            closed_at = datetime.strptime(issue.get('closed_at'), "%Y-%m-%dT%H:%M:%SZ") if status == 'closed' else None
 
-            # Commit the session to save the changes to the database
+            # Check if the project_card_id already exists in the database
+            existing_data = AllData.query.filter_by(project_card_id=project_card_id).first()
+
+            if existing_data:
+                # If the card already exists, update its status, closed_at date and assignee
+                existing_data.status = status
+                existing_data.closed_at = closed_at
+                existing_data.created_at = created_at
+                existing_data.assignee = assignee_login  # update assignee field
+                logger.info('Data updated successfully for record_id: %s', existing_data.record_id)
+            else:
+                # If the card doesn't exist, create a new AllData object and add it to the session
+                all_data = AllData(project_card_id=project_card_id, status=status, closed_at=closed_at, created_at=created_at, assignee=assignee_login)
+                db.session.add(all_data)
+                logger.info('Data saved successfully with record_id: %s', all_data.record_id)
+
+            # Commit the session to save the changes
             db.session.commit()
-
-            logger.info('Data saved successfully')
-        elif action == 'reordered':
-            changes = data.get('changes', {})
-            previous_projects_v2_item_node_id = changes.get('previous_projects_v2_item_node_id', {})
-
-            mapped_data = {
-                'action': action,
-                'project_card_id': None,  # Set the appropriate values if needed
-                'project_card_node_id': None,  # Set the appropriate values if needed
-                'project_card_note': None,  # Set the appropriate values if needed
-                'creator_id': None,  # Set the appropriate values if needed
-                'creator_login': None,  # Set the appropriate values if needed
-                'changes_note_from': None,  # Set the appropriate values if needed
-                'previous_projects_v2_item_node_id_from': previous_projects_v2_item_node_id.get('from'),
-                'previous_projects_v2_item_node_id_to': previous_projects_v2_item_node_id.get('to')
-            }
-
-            # Create a new AllData object and add it to the session
-            all_data = AllData(**mapped_data)
-            db.session.add(all_data)
-
-            # Commit the session to save the changes to the database
-            db.session.commit()
-
-            logger.info('Data saved successfully')
         else:
-            logger.info('Action is not "edited" or "reordered". Skipping webhook processing.')
-
+            logger.error("Issue not found in payload. Skipping webhook processing.")
     except Exception as e:
-        logger.exception('An error occurred while processing the webhook: %s', str(e))
+        logger.error("An error occurred during webhook processing: %s", str(e))
         db.session.rollback()
-
-    return jsonify({'message': 'Webhook processed successfully'})
 
 @app.route('/payload', methods=['POST'])
 def webhook():
@@ -97,6 +75,7 @@ def webhook():
     process_webhook(data)
     return jsonify({'message': 'Webhook processed successfully'})
 
+
 if __name__ == "__main__":
     with app.app_context():
         try:
@@ -104,4 +83,6 @@ if __name__ == "__main__":
             logger.info("Database connected and tables created successfully.")
         except Exception as e:
             logger.error(f"Error setting up database: {e}", exc_info=True)
-        app.run(host='0.0.0.0', port=4567)
+        
+    app.run(host='0.0.0.0', port=4567)
+
