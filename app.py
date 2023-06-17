@@ -4,7 +4,6 @@ import os
 import logging
 from dotenv import load_dotenv
 from datetime import datetime
-import requests
 import http.client as http_client
 http_client.HTTPConnection.debuglevel = 1
 
@@ -27,6 +26,7 @@ class AllData(db.Model):
     status = db.Column(db.Text)
     assignee = db.Column(db.Text)  # New column for the assignee
 
+
 def process_webhook(data):
     try:
         issue = data.get('issue')
@@ -36,13 +36,17 @@ def process_webhook(data):
 
             # Get the assignee information
             assignee = issue.get('assignee')
-            assignee_login = assignee.get('login') if assignee else None  # Handle case where assignee might be None
+            # Handle case where assignee might be None
+            assignee_login = assignee.get('login') if assignee else None
 
-            created_at = datetime.strptime(issue.get('created_at'), "%Y-%m-%dT%H:%M:%SZ")
-            closed_at = datetime.strptime(issue.get('closed_at'), "%Y-%m-%dT%H:%M:%SZ") if status == 'closed' else None
+            created_at = datetime.strptime(
+                issue.get('created_at'), "%Y-%m-%dT%H:%M:%SZ")
+            closed_at = datetime.strptime(
+                issue.get('closed_at'), "%Y-%m-%dT%H:%M:%SZ") if status == 'closed' else None
 
             # Check if the project_card_id already exists in the database
-            existing_data = AllData.query.filter_by(project_card_id=project_card_id).first()
+            existing_data = AllData.query.filter_by(
+                project_card_id=project_card_id).first()
 
             if existing_data:
                 # If the card already exists, update its status, closed_at date and assignee
@@ -50,20 +54,25 @@ def process_webhook(data):
                 existing_data.closed_at = closed_at
                 existing_data.created_at = created_at
                 existing_data.assignee = assignee_login  # update assignee field
-                logger.info('Data updated successfully for record_id: %s', existing_data.record_id)
+                logger.info(
+                    'Data updated successfully for record_id: %s', existing_data.record_id)
             else:
                 # If the card doesn't exist, create a new AllData object and add it to the session
-                all_data = AllData(project_card_id=project_card_id, status=status, closed_at=closed_at, created_at=created_at, assignee=assignee_login)
+                all_data = AllData(project_card_id=project_card_id, status=status,
+                                   closed_at=closed_at, created_at=created_at, assignee=assignee_login)
                 db.session.add(all_data)
-                logger.info('Data saved successfully with record_id: %s', all_data.record_id)
+                logger.info(
+                    'Data saved successfully with record_id: %s', all_data.record_id)
 
             # Commit the session to save the changes
             db.session.commit()
         else:
-            logger.error("Issue not found in payload. Skipping webhook processing.")
+            logger.error(
+                "Issue not found in payload. Skipping webhook processing.")
     except Exception as e:
         logger.error("An error occurred during webhook processing: %s", str(e))
         db.session.rollback()
+
 
 @app.route('/payload', methods=['POST'])
 def webhook():
@@ -83,6 +92,5 @@ if __name__ == "__main__":
             logger.info("Database connected and tables created successfully.")
         except Exception as e:
             logger.error(f"Error setting up database: {e}", exc_info=True)
-        
-    app.run(host='0.0.0.0', port=4567)
 
+    app.run(host='0.0.0.0', port=4567)
