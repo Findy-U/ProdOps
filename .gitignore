@@ -1,3 +1,8 @@
 .env
+bin
+lib
+lib64
+share
+venv
 /myenv
 .vscode/
