@@ -5,6 +5,7 @@ import logging
 from dotenv import load_dotenv
 from datetime import datetime
 import http.client as http_client
+
 http_client.HTTPConnection.debuglevel = 1
 
 load_dotenv()
@@ -88,7 +89,7 @@ def webhook():
 if __name__ == "__main__":
     with app.app_context():
         try:
-            db.create_all()
+            # db.create_all()
             logger.info("Database connected and tables created successfully.")
         except Exception as e:
             logger.error(f"Error setting up database: {e}", exc_info=True)

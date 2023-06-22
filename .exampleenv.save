@@ -1,0 +1,1 @@
+export SQLALCHEMY_DATABASE_URI="postgresql://:yourpassword@localhost/yourdatabase"
