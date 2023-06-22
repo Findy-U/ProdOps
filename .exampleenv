@@ -1,1 +1,1 @@
-export SQLALCHEMY_DATABASE_URI="mysql+pymysql://findyroot:jz2b2S984AxC@findy-bd.mysql.database.azure.com:3306/findydata?sslaccept=strict"
+export SQLALCHEMY_DATABASE_URI="mysql+pymysql://user:senha@host:3306/findydata?sslaccept=strict"
