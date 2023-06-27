@@ -16,7 +16,9 @@ ssl_args = {
 
 load_dotenv()
 
-engine = create_engine(os.environ['SQLALCHEMY_DATABASE_URI'], connect_args=ssl_args)
+DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
+
+engine = create_engine(DATABASE_URI, connect_args=ssl_args)
 Session = sessionmaker(bind=engine)
 
 Base = declarative_base()
@@ -25,10 +27,11 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
 
 class Alldata(Base):
     __tablename__ = 'alldata'
@@ -39,6 +42,7 @@ class Alldata(Base):
     project_card_id = db.Column(db.Text)
     status = db.Column(db.Text)
     assignee = db.Column(db.Text)
+
 
 def process_webhook(data):
     try:
@@ -63,15 +67,18 @@ def process_webhook(data):
 
                 created_at = issue.get('created_at')
                 if created_at is not None:
-                    created_at = datetime.strptime(created_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
+                    created_at = datetime.strptime(
+                        created_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
 
                 closed_at = issue.get('closed_at')
                 if closed_at is not None:
-                    closed_at = datetime.strptime(closed_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
+                    closed_at = datetime.strptime(
+                        closed_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
 
                 status = 'open' if closed_at is None else 'closed'
-                
-                existing_data = session.query(Alldata).filter_by(project_card_id=project_card_id).first()
+
+                existing_data = session.query(Alldata).filter_by(
+                    project_card_id=project_card_id).first()
 
                 if existing_data:
                     if assignee_login is not None:
@@ -84,12 +91,15 @@ def process_webhook(data):
                         existing_data.status = status
                     try:
                         session.commit()
-                        logger.info('Data updated successfully for record_id: %s', existing_data.record_id)
+                        logger.info(
+                            'Data updated successfully for record_id: %s', existing_data.record_id)
                     except Exception as e:
-                        logger.error("An error occurred during updating data: %s", str(e))
+                        logger.error(
+                            "An error occurred during updating data: %s", str(e))
                         session.rollback()
                 else:
-                    logger.info('No existing data found for project_card_id: %s', project_card_id)
+                    logger.info(
+                        'No existing data found for project_card_id: %s', project_card_id)
                     all_data = Alldata(
                         project_card_id=project_card_id,
                         created_at=created_at,
@@ -99,11 +109,14 @@ def process_webhook(data):
                     )
                     session.add(all_data)
                     session.commit()
-                    logger.info('Data saved successfully with record_id: %s', all_data.record_id)
+                    logger.info(
+                        'Data saved successfully with record_id: %s', all_data.record_id)
             else:
-                logger.error("Invalid payload structure. Skipping webhook processing.")
+                logger.error(
+                    "Invalid payload structure. Skipping webhook processing.")
         else:
-            logger.error("Unsupported action: %s. Skipping webhook processing.", action)
+            logger.error(
+                "Unsupported action: %s. Skipping webhook processing.", action)
     except Exception as e:
         logger.error("An error occurred during webhook processing: %s", str(e))
         session.rollback()
@@ -120,6 +133,7 @@ def webhook():
     logger.info('Received webhook payload: %s', data)
     process_webhook(data)
     return jsonify({'message': 'Webhook processed successfully'})
+
 
 if __name__ == "__main__":
     with app.app_context():
