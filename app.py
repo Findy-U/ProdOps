@@ -21,7 +21,6 @@ DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 engine = create_engine(DATABASE_URI, connect_args=ssl_args)
 Session = sessionmaker(bind=engine)
 
-Base = declarative_base()
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -31,6 +30,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+Base = declarative_base()
 
 
 class Alldata(Base):
