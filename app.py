@@ -10,7 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 ssl_args = {
     'ssl': {
-        'ca': r'C:\Users\Ultra\Downloads\DigiCertGlobalRootCA.crt.pem'
+        'ca': os.environ['SSL_PATH']
     }
 }
 
