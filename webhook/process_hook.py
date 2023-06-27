@@ -1,27 +1,11 @@
-import os
-import logging
 from dotenv import load_dotenv
 from datetime import datetime, timezone
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from ..models.models import Alldata
+from logger.logger import logger
+from ..config import session as Session
 
 
 load_dotenv()
-
-ssl_args = {
-    'ssl': {
-        'ca': os.environ['SSL_PATH']
-    }
-}
-
-DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
-
-engine = create_engine(DATABASE_URI, connect_args=ssl_args)
-Session = sessionmaker(bind=engine)
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 
 def process_webhook(data):
