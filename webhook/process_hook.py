@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 from datetime import datetime, timezone
-from ..models.models import Alldata
+from models.models import Alldata
 from logger.logger import logger
-from ..config import session as Session
+from config import session as Session
 
 
 load_dotenv()
