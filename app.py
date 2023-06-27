@@ -1,20 +1,20 @@
 from flask import Flask, jsonify, request, abort
-from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
 from dotenv import load_dotenv
 from datetime import datetime, timezone
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from models.models import db, Alldata, Base
+
+
+load_dotenv()
 
 ssl_args = {
     'ssl': {
         'ca': os.environ['SSL_PATH']
     }
 }
-
-load_dotenv()
 
 DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
 
@@ -29,20 +29,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
-
-Base = declarative_base()
-
-
-class Alldata(Base):
-    __tablename__ = 'alldata'
-
-    record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    closed_at = db.Column(db.DateTime, nullable=True)
-    project_card_id = db.Column(db.Text)
-    status = db.Column(db.Text)
-    assignee = db.Column(db.Text)
+db.init_app(app)
 
 
 def process_webhook(data):
@@ -144,4 +131,4 @@ if __name__ == "__main__":
         except Exception as e:
             logger.error(f"Error setting up database: {e}", exc_info=True)
 
-    app.run(host='0.0.0.0', port=4567)
+    app.run(host='0.0.0.0', port=4567, debug=True)
