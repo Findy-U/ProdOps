@@ -5,6 +5,8 @@ from logger.logger import logger
 from config import engine
 import os
 
+# Logger
+logger = logger()
 
 # App building
 app = Flask(__name__)

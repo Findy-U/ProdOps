@@ -4,8 +4,10 @@ from models.models import Alldata
 from logger.logger import logger
 from config import session as Session
 
+# Logger
+logger = logger()
 
-load_dotenv()
+load_dotenv()  # Not sure of what it does, problably will be removed
 
 
 def process_webhook(data):
