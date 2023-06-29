@@ -24,9 +24,8 @@ def process_webhook(data):
                         assignee = assignees[0]
 
                 if assignee:
-                    assignee_login = assignee.get('login')
-                else:
-                    assignee_login = None
+                    assignee_login = assignee.get(
+                        'login') if assignee.get('login') else None
 
                 created_at = issue.get('created_at')
                 if created_at is not None:
