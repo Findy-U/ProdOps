@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from models.models import Alldata
 from logger.logger import logger
-from config import session as Session
+from config import session
 
 # Logger
 logger = logger()
@@ -9,7 +9,6 @@ logger = logger()
 
 def process_webhook(data):
     try:
-        session = Session()
         logger.info('Type and value of data: %s, %s', type(data), data)
         action = data.get('action')
 
@@ -28,11 +27,13 @@ def process_webhook(data):
                         'login') if assignee.get('login') else None
 
                 created_at = issue.get('created_at')
+
                 if created_at is not None:
                     created_at = datetime.strptime(
                         created_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
 
                 closed_at = issue.get('closed_at')
+
                 if closed_at is not None:
                     closed_at = datetime.strptime(
                         closed_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
