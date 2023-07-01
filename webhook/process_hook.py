@@ -51,26 +51,30 @@ def process_webhook(data):
 
             status = 'open' if closed_at is None else 'closed'
 
+            # Check if record is already in DB
             existing_data = session.query(Alldata).filter_by(
                 project_card_id=project_card_id).first()
 
             if existing_data:
-                if assignee_login is not None:
+                if assignee_login:
                     existing_data.assignee = assignee_login
-                if closed_at is not None:
+                if closed_at:
                     existing_data.closed_at = closed_at
-                if created_at is not None:
+                if created_at:
                     existing_data.created_at = created_at
-                if status is not None:
+                if status:
                     existing_data.status = status
+
                 try:
                     session.commit()
                     logger.info(
                         'Data updated successfully for record_id: %s', existing_data.record_id)
+
                 except Exception as e:
                     logger.error(
                         "An error occurred during updating data: %s", str(e))
                     session.rollback()
+
             else:
                 logger.info(
                     'No existing data found for project_card_id: %s', project_card_id)
