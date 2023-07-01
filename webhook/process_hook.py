@@ -1,10 +1,12 @@
 from datetime import datetime, timezone
 from models.models import Alldata
 from logger.logger import logger
-from config import session
+from config import session as Session
 
 # Logger
 logger = logger()
+
+session = Session()
 
 
 def process_webhook(data):
@@ -19,7 +21,6 @@ def process_webhook(data):
                 logger.error(
                     "Invalid payload structure. Skipping webhook processing.")
                 session.close()
-
                 return
 
             # Bulting the obj
