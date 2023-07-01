@@ -14,17 +14,27 @@ def process_webhook(data):
 
         if action in ['opened', 'reopened', 'assigned', 'closed', 'reordered', 'edited']:
             issue = data.get('issue')
-            if issue:
-                project_card_id = str(issue.get('id'))
-                assignee = issue.get('assignee')
-                if not assignee:
-                    assignees = issue.get('assignees')
-                    if assignees:
-                        assignee = assignees[0]
 
-                if assignee:
-                    assignee_login = assignee.get(
-                        'login') if assignee.get('login') else None
+            if not issue:
+                logger.error(
+                    "Invalid payload structure. Skipping webhook processing.")
+                session.close()
+
+                return
+
+            # Bulting the obj
+            project_card_id = str(issue.get('id'))
+
+            # Reducing assignee verification
+            assignee = issue.get('assignee')
+
+            if not assignee:
+                assignees = issue.get('assignees')
+
+                if assignees:
+                    assignee = assignees[0]
+                    login = assignee.get('login')
+                    assignee_login = login if login else None
 
                 created_at = issue.get('created_at')
 
@@ -74,9 +84,7 @@ def process_webhook(data):
                     session.commit()
                     logger.info(
                         'Data saved successfully with record_id: %s', all_data.record_id)
-            else:
-                logger.error(
-                    "Invalid payload structure. Skipping webhook processing.")
+
         else:
             logger.error(
                 "Unsupported action: %s. Skipping webhook processing.", action)
