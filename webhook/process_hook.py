@@ -9,7 +9,7 @@ logger = logger()
 session = Session()
 
 
-def process_webhook(data):
+def process_webhook(data: dict):
     try:
         logger.info('Type and value of data: %s, %s', type(data), data)
         action = data.get('action')
@@ -17,10 +17,22 @@ def process_webhook(data):
 
         if action == 'reopened':
             # 1 - Get object by id
-            # 2 - Set closed_at to None
-            # 3.0 - Log action
-            # 3.1 - return response
+            parsed_issue = parse_issue(issue)
+            project_card_id = parsed_issue['project_card_id']
 
+            existing_data = session.query(Alldata).filter_by(
+                project_card_id=project_card_id).first()
+
+            # 2 - Set closed_at to None and status to Open
+            existing_data.closed_at = None
+            existing_data.status = 'Open'
+
+            session.add(existing_data)
+            session.commit()
+            logger.info(
+                'Issue reopened successfully for record_id: %s',
+                existing_data.record_id)
+            # 3.1 - return response
             return
 
         if action in ['opened', 'assigned', 'closed', 'reordered', 'edited']:
