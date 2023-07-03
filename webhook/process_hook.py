@@ -81,8 +81,8 @@ def process_webhook(data):
         session.close()
 
 
-def parse_issue(issue) -> dict:
-    """ This function separates the parsing of issue object from
+def parse_issue(issue: dict) -> dict:
+    """ This function separates the parsing of issue dictionary from
         the rest of the webhook code, making it easier to read. """
 
     project_card_id = str(issue.get('id'))
