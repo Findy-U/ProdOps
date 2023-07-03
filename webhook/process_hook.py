@@ -13,10 +13,17 @@ def process_webhook(data):
     try:
         logger.info('Type and value of data: %s, %s', type(data), data)
         action = data.get('action')
+        issue = data.get('issue')
 
-        if action in ['opened', 'reopened', 'assigned', 'closed', 'reordered', 'edited']:
-            issue = data.get('issue')
+        if action == 'reopened':
+            # 1 - Get object by id
+            # 2 - Set closed_at to None
+            # 3.0 - Log action
+            # 3.1 - return response
 
+            return
+
+        if action in ['opened', 'assigned', 'closed', 'reordered', 'edited']:
             if not issue:
                 logger.error(
                     "Invalid payload structure. Skipping webhook processing.")
