@@ -15,6 +15,12 @@ def process_webhook(data: dict):
         action = data.get('action')
         issue = data.get('issue')
 
+        if not issue:
+            logger.error(
+                "Invalid payload structure. Skipping webhook processing.")
+            session.close()
+            return
+
         if action == 'reopened':
             # 1 - Get object by id
             parsed_issue = parse_issue(issue)
@@ -36,12 +42,6 @@ def process_webhook(data: dict):
             return
 
         if action in ['opened', 'assigned', 'closed', 'reordered', 'edited']:
-            if not issue:
-                logger.error(
-                    "Invalid payload structure. Skipping webhook processing.")
-                session.close()
-                return
-
             parsed_issue = parse_issue(issue)
 
             closed_at = parsed_issue["closed_at"]
