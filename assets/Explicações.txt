@@ -1,0 +1,52 @@
+ProdOps/
+├── app.py
+├── components/
+│   ├── __init__.py
+│   ├── dashboard.py
+│   ├── helper_functions.py
+│   └── templates/
+│       └── index.html
+├── static/
+│   ├── css/
+│   │   └── styles.css
+│   └── images/
+│       └── logo.png
+├── database/
+│   ├── __init__.py
+│   └── db.py
+└── models/
+    ├── __init__.py
+    └── models.py
+Aqui está uma descrição das alterações feitas:
+
+app.py: O arquivo principal do seu projeto, onde você irá configurar e executar o aplicativo.
+
+components/: O diretório que contém os componentes do seu aplicativo.
+
+__init__.py: Um arquivo vazio que indica que o diretório components é um pacote Python.
+
+dashboard.py: O arquivo que contém a lógica e a estrutura do seu painel (dashboard).
+
+helper_functions.py: O arquivo que contém funções auxiliares ou utilitárias para o seu aplicativo.
+
+templates/: O diretório que contém os arquivos de modelo ou templates HTML do seu aplicativo. Aqui, 
+você pode adicionar mais arquivos HTML além do index.html, se necessário.
+
+static/: O diretório que contém os arquivos estáticos do seu aplicativo.
+
+css/: O diretório que contém os arquivos CSS, como o styles.css para estilizar o seu aplicativo.
+
+images/: O diretório que contém as imagens utilizadas no seu aplicativo, como o logo.png.
+
+database/: O diretório que contém os arquivos relacionados ao banco de dados.
+
+__init__.py: Um arquivo vazio que indica que o diretório database é um pacote Python.
+
+db.py: O arquivo que contém a lógica de conexão e interação com o banco de dados.
+
+models/: O diretório que contém os arquivos de definição de modelos ou estruturas de dados do seu 
+aplicativo.
+
+__init__.py: Um arquivo vazio que indica que o diretório models é um pacote Python.
+
+models.py: O arquivo que contém as definições dos modelos de dados do seu aplicativo.

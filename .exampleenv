@@ -1,1 +1,0 @@
-export SQLALCHEMY_DATABASE_URI="mysql+pymysql://user:senha@host:3306/findydata?sslaccept=strict"
