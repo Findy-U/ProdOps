@@ -31,7 +31,7 @@ def process_webhook(data: dict):
 
             # 2 - Set closed_at to None and status to Open
             existing_data.closed_at = None
-            existing_data.status = 'Open'
+            existing_data.status = 'Maintenance'
 
             session.add(existing_data)
             session.commit()
