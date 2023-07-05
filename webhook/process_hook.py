@@ -1,7 +1,7 @@
 from models.models import Alldata
 from logger.logger import logger
 from config import session as Session
-from parse_issue import parse_issue
+from .parse_issue import parse_issue
 
 # Logger
 logger = logger()
@@ -33,11 +33,11 @@ def process_webhook(data: dict):
 
             session.add(existing_data)
             session.commit()
-            session.close()
-
             logger.info(
                 'Issue reopened successfully for record_id: %s',
                 existing_data.record_id)
+            session.close()
+
             return
 
         if action in ['opened', 'assigned', 'closed', 'reordered', 'edited']:
@@ -64,11 +64,10 @@ def process_webhook(data: dict):
                     existing_data.status = status
 
                 session.commit()
-                session.close()
-
                 logger.info(
                     'Data updated successfully for record_id: %s',
                     existing_data.record_id)
+                session.close()
                 return
 
             else:
@@ -85,11 +84,10 @@ def process_webhook(data: dict):
                 )
                 session.add(all_data)
                 session.commit()
-                session.close()
-
                 logger.info(
                     'Data saved successfully with record_id: %s',
                     all_data.record_id)
+                session.close()
 
                 return
         else:
