@@ -7,7 +7,8 @@ from components.layouts import dashboard_layout
 css_path = os.path.join(os.path.dirname(__file__), 'assets/css/styles.css')
 
 # Criação do aplicativo Dash
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, css_path])
+app = dash.Dash(__name__, external_stylesheets=[
+                dbc.themes.BOOTSTRAP, css_path])
 
 # Layout do dashboard
 app.layout = dashboard_layout.layout
