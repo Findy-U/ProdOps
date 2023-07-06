@@ -6,3 +6,4 @@ share
 venv
 /myenv
 .vscode/
+__pycache__
