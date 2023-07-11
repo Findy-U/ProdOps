@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, abort
 from webhook.process_hook import process_webhook
-from models.models import db, Base
+from models.models import db, Base, Alldata
 from logger.logger import logger
 from config import engine
 import os
@@ -9,8 +9,21 @@ import os
 logger = logger()
 
 
-def create_app() -> Flask:
+def create_app(test: bool) -> Flask:
     app = Flask(__name__)
+
+    if test:
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+            'TEST_DATABASE_URI')
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+        # Create a clone for testing
+        Alldata.__tablename__ = 'alldata_test_clone'
+        db.init_app(app)
+        db.create_all(engine)
+
+        return app
+
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
         'SQLALCHEMY_DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -31,7 +44,7 @@ def webhook():
         abort(400)
 
     data = request.get_json()
-    logger.info('Received webhook payload: %s', data)
+    # logger.info('Received webhook payload: %s', data)
     process_webhook(data)
 
     return jsonify({'message': 'Webhook processed successfully'})

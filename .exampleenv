@@ -1,3 +1,5 @@
 export SQLALCHEMY_DATABASE_URI="mysql+pymysql://user:senha@host:3306/findydata?sslaccept=strict"
 
 export SSL_PATH="~/YOUR/PATH/TO/SSL"
+
+export TEST_DATABASE_URI="test_db_uri"
