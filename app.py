@@ -1,5 +1,4 @@
-from flask import Flask  # , jsonify, request, abort
-# from webhook.process_hook import process_webhook
+from flask import Flask
 from models.models import db, Base, Alldata
 from logger.logger import logger
 from config import engine
