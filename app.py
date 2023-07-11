@@ -41,7 +41,6 @@ def register_routes(app: Flask) -> Flask:
     return app
 
 
-# This var is declared for the sake of all imports through the app
 app = create_app()
 
 
