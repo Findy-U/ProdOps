@@ -9,9 +9,9 @@ logger = logger()
 session = Session()
 
 
-def process_webhook(data: dict):
+def process_webhook(data: dict) -> None:
     try:
-        logger.info('Type and value of data: %s, %s', type(data), data)
+        # logger.info('Type and value of data: %s, %s', type(data), data)
         action = data.get('action')
         issue = data.get('issue')
 
@@ -68,6 +68,7 @@ def process_webhook(data: dict):
                     'Data updated successfully for record_id: %s',
                     existing_data.record_id)
                 session.close()
+
                 return
 
             else:
