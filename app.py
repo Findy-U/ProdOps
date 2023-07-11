@@ -8,12 +8,20 @@ import os
 # Logger
 logger = logger()
 
-# App building
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
+def create_app() -> Flask:
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+        'SQLALCHEMY_DATABASE_URI')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.init_app(app)
+
+    return app
+
+
+# This var is declared for the sake of all imports through the app
+app = create_app()
 
 
 @app.route('/payload', methods=['POST'])
