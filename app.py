@@ -1,28 +1,32 @@
-from flask import Flask, jsonify, request, abort
-from webhook.process_hook import process_webhook
+from flask import Flask  # , jsonify, request, abort
+# from webhook.process_hook import process_webhook
 from models.models import db, Base, Alldata
 from logger.logger import logger
 from config import engine
 import os
 
+from routes.webhook import webhook_route
+
 # Logger
 logger = logger()
 
 
-def create_app(test: bool) -> Flask:
+def create_app(test: bool = False) -> Flask:
     app = Flask(__name__)
 
     if test:
         app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-            'TEST_DATABASE_URI')
+            'SQLALCHEMY_DATABASE_URI')
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         # Create a clone for testing
         Alldata.__tablename__ = 'alldata_test_clone'
         db.init_app(app)
-        db.create_all(engine)
 
-        return app
+        with app.app_context():
+            Base.metadata.create_all(engine)
+
+        return register_routes(app)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
         'SQLALCHEMY_DATABASE_URI')
@@ -30,24 +34,16 @@ def create_app(test: bool) -> Flask:
 
     db.init_app(app)
 
+    return register_routes(app)
+
+
+def register_routes(app: Flask) -> Flask:
+    app.register_blueprint(webhook_route)
     return app
 
 
 # This var is declared for the sake of all imports through the app
 app = create_app()
-
-
-@app.route('/payload', methods=['POST'])
-def webhook():
-    if not request.is_json:
-        logger.error('Invalid JSON payload')
-        abort(400)
-
-    data = request.get_json()
-    # logger.info('Received webhook payload: %s', data)
-    process_webhook(data)
-
-    return jsonify({'message': 'Webhook processed successfully'})
 
 
 if __name__ == "__main__":
