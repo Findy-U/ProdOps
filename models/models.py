@@ -1,13 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
 db = SQLAlchemy()
 
-Base = declarative_base()
 
-
-class Alldata(Base):
+class Alldata(db.Model):
     """ There's only one attribute in this class using nullable as true.
         It's good to notice that in DB all attributes are nullable except
         by record_key, that is the primary key. """
