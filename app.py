@@ -1,5 +1,5 @@
 from flask import Flask
-from models.models import db, Alldata
+from models.models import db, Alldata, TestDB
 from logger.logger import logger
 import dotenv
 import os
@@ -22,7 +22,6 @@ def create_app(test: bool = False) -> Flask:
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
         # Create a clone for testing
-        Alldata.__tablename__ = 'alldata_test_clone'
         db.init_app(app)
 
         with app.app_context():

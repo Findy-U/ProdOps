@@ -17,3 +17,14 @@ class Alldata(db.Model):
     project_card_id = db.Column(db.Text)
     status = db.Column(db.Text)
     assignee = db.Column(db.Text)
+
+
+class TestDB(db.Model):
+    __tablename__ = 'test_db'
+
+    record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    closed_at = db.Column(db.DateTime, nullable=True)
+    project_card_id = db.Column(db.Text)
+    status = db.Column(db.Text)
+    assignee = db.Column(db.Text)
