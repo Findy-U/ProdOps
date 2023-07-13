@@ -1,5 +1,5 @@
 from flask import Flask
-from models.models import db, Alldata, TestDB
+from models.models import db
 from logger.logger import logger
 import dotenv
 import os
