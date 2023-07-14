@@ -20,6 +20,7 @@ class Alldata(db.Model):
 
 
 class TestDB(db.Model):
+    __test__ = False
     __tablename__ = 'test_db'
 
     record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
