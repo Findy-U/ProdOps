@@ -17,6 +17,7 @@ def app():
     with app.app_context():
         # Clear all records from TestDB
         db.session.query(TestDB).delete()
+        db.session.commit()
 
 
 @pytest.fixture()
