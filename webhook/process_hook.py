@@ -2,16 +2,17 @@ from models.models import Alldata, TestDB
 from logger.logger import logger
 from .parse_issue import parse_issue
 from models.models import db
+from flask import current_app, Response
 
 # Logger
 logger = logger()
 
 
-def process_webhook(data: dict, test=False) -> None:
+def process_webhook(data: dict) -> Response:
     # logger.info('Type and value of data: %s, %s', type(data), data)
     db_instance = Alldata
 
-    if test:
+    if current_app.config["TESTING"]:
         db_instance = TestDB
 
     action = data.get('action')
@@ -21,25 +22,25 @@ def process_webhook(data: dict, test=False) -> None:
         logger.error(
             "Invalid payload structure. Skipping webhook processing.")
         db.session.close()
-        return
+
+        return 'bad Request', 400
 
     parsed_issue = parse_issue(issue)
 
     if action == 'reopened':
-        issue_reopened(parsed_issue, db_instance)
-        return
+        return issue_reopened(parsed_issue, db_instance)
 
     if action in ['opened', 'assigned', 'closed', 'reordered', 'edited']:
-        issue_create_or_edit(parsed_issue, db_instance)
-        return
+        return issue_create_or_edit(parsed_issue, db_instance)
 
     else:
         logger.error(
             "Unsupported action: %s. Skipping webhook processing.", action)
-        return
+
+        return 'unsupported action', 400
 
 
-def issue_reopened(parsed_issue: dict, db_instance) -> None:
+def issue_reopened(parsed_issue: dict, db_instance) -> Response:
     project_card_id = parsed_issue['project_card_id']
 
     existing_data = db.session.query(db_instance).filter_by(
@@ -54,10 +55,10 @@ def issue_reopened(parsed_issue: dict, db_instance) -> None:
         'Issue reopened successfully for record_id: %s',
         existing_data.record_id)
 
-    return
+    return 'resource updated successfully', 204
 
 
-def issue_create_or_edit(parsed_issue: dict, db_instance) -> None:
+def issue_create_or_edit(parsed_issue: dict, db_instance) -> Response:
     closed_at = parsed_issue["closed_at"]
     project_card_id = parsed_issue["project_card_id"]
     assignee_login = parsed_issue["assignee_login"]
@@ -83,7 +84,7 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> None:
             'Data updated successfully for record_id: %s',
             existing_data.record_id)
 
-        return
+        return 'resource updated successfully', 204
 
     else:
         logger.info(
@@ -103,4 +104,4 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> None:
             'Data saved successfully with record_id: %s',
             all_data.record_id)
 
-        return
+        return 'resource created', 201
