@@ -6,10 +6,13 @@ from models.models import TestDB, db
 @pytest.fixture()
 def app():
     # Setup
-    app = create_app(True)
+    app = create_app()
     app.config.update({
         "TESTING": True,
     })
+
+    with app.app_context():
+        db.create_all()
 
     yield app
 

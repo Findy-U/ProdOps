@@ -10,26 +10,11 @@ from routes.webhook import webhook_route
 logger = logger()
 
 
-def create_app(test: bool = False) -> Flask:
+def create_app() -> Flask:
     # Get all env variables
     dotenv.load_dotenv('.env')
 
     app = Flask(__name__)
-
-    if test:
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-            'SQLALCHEMY_DATABASE_URI')
-        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-        # Create a clone for testing
-        db.init_app(app)
-
-        with app.app_context():
-            db.create_all()
-
-        register_routes(app)
-
-        return app
 
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
         'SQLALCHEMY_DATABASE_URI')
@@ -37,6 +22,7 @@ def create_app(test: bool = False) -> Flask:
 
     db.init_app(app)
     register_routes(app)
+
     return app
 
 
