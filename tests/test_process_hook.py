@@ -1,6 +1,7 @@
 from payload_example.full_payload_example import full_payload
 from payload_example.issue_opened import issue_opened
-from webhook.process_hook import process_webhook
+from payload_example.issue_closed import issue_closed
+from payload_example.issue_reopened import issue_reopened
 from webhook.parse_issue import parse_issue
 
 from models.models import db, TestDB
@@ -14,34 +15,36 @@ def test_send_payload_to_webhook(client) -> None:
     assert response.status_code == 400
 
 
-def test_issue_opened_and_updated(client) -> None:
-    new_issue = {
-        "action": "opened",
-        "issue": {
-            "project_card_id": "1012020302023",
-            "assignee": 'Demian143',
-            "assignee_login": 'Demian143',
-            "created_at": "2023-07-14T02:18:42Z",
-            "closed_at": None
-        }
-    }
-
-    response = client.post('/payload', json=new_issue)
+def test_issue_opened(client, app) -> None:
+    response = client.post('/payload', json=issue_opened)
     assert response.status_code == 201
 
-    # Update issue
-    new_issue['issue']['closed_at'] = '2023-07-17T00:33:45Z'
-    response = client.post('/payload', json=new_issue)
+
+def test_issue_closed(client) -> None:
+    # Open issue
+    client.post('/payload', json=issue_opened)
+    # Close issue
+    response = client.post('/payload', json=issue_closed)
     assert response.status_code == 204
 
 
-def test_issue_opened(app) -> None:
-    # Get project card id to query in db
-    issue_parsed = parse_issue(issue_opened.get('issue'))
+def test_issue_reopened(client) -> None:
+    # Open issue
+    client.post('/payload', json=issue_opened)
+    # Close issue
+    client.post('/payload', json=issue_closed)
+    # Reopen Issue
+    response = client.post('/payload', json=issue_reopened)
+    assert response.status_code == 204
+
+
+def test_verify_if_data_persisted(client, app) -> None:
+    client.post('/payload', json=issue_opened)
 
     with app.app_context():
-        assert process_webhook(issue_opened) == ('resource created', 201)
-
+        # Get project card id to query in db
+        issue_parsed = parse_issue(issue_opened.get('issue'))
+        # Verify if data persisted
         check_record_exists = db.session.query(TestDB).filter_by(
             project_card_id=issue_parsed.get('project_card_id')).first()
 
