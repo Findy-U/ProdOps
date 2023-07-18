@@ -31,7 +31,7 @@ def process_webhook(data: dict) -> Response:
         return issue_reopened(parsed_issue, db_instance)
 
     if action in ['opened', 'assigned', 'closed', 'reordered', 'edited']:
-        return issue_create_or_edit(parsed_issue, db_instance)
+        return issue_create_or_edit(parsed_issue, db_instance, action)
 
     else:
         logger.error(
@@ -58,7 +58,7 @@ def issue_reopened(parsed_issue: dict, db_instance) -> Response:
     return 'resource updated successfully', 204
 
 
-def issue_create_or_edit(parsed_issue: dict, db_instance) -> Response:
+def issue_create_or_edit(parsed_issue: dict, db_instance, action: str) -> Response:
     closed_at = parsed_issue["closed_at"]
     project_card_id = parsed_issue["project_card_id"]
     assignee_login = parsed_issue["assignee_login"]
@@ -84,7 +84,7 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> Response:
             'Data updated successfully for record_id: %s',
             existing_data.record_id)
 
-        return 'resource updated successfully', 204
+        return f'resource {action} successfully', 204
 
     else:
         logger.info(
