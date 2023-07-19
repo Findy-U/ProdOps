@@ -1,5 +1,7 @@
 # ProdOps
 
+## Orientações para o Git
+
 1 - Instale o Git:
 
 Se você ainda não instalou o Git, faça o download e instale-o a partir do site oficial: https://git-scm.com/downloads
