@@ -6,6 +6,15 @@ from webhook.parse_issue import parse_issue
 
 from models.models import db, TestDB
 
+""" Fixture scoped as 'session'. Every test assumes the
+    action the last test took persisted.
+    Can be resumed:
+        - Send ping payload.
+        - Open issue.
+        - Close issue.
+        - Reopen issue.
+        - Verify if data really persisted. """
+
 
 def test_send_payload_to_webhook(client) -> None:
     """ Sends the ping payload from GitHub
@@ -21,29 +30,20 @@ def test_issue_opened(client, app) -> None:
 
 
 def test_issue_closed(client) -> None:
-    # Open issue
-    client.post('/payload', json=issue_opened)
-    # Close issue
     response = client.post('/payload', json=issue_closed)
     assert response.status_code == 204
 
 
 def test_issue_reopened(client) -> None:
-    # Open issue
-    client.post('/payload', json=issue_opened)
-    # Close issue
-    client.post('/payload', json=issue_closed)
-    # Reopen Issue
     response = client.post('/payload', json=issue_reopened)
     assert response.status_code == 204
 
 
 def test_verify_if_data_persisted(client, app) -> None:
-    client.post('/payload', json=issue_opened)
+    # Get project card id to query in db
+    issue_parsed = parse_issue(issue_opened.get('issue'))
 
     with app.app_context():
-        # Get project card id to query in db
-        issue_parsed = parse_issue(issue_opened.get('issue'))
         # Verify if data persisted
         check_record_exists = db.session.query(TestDB).filter_by(
             project_card_id=issue_parsed.get('project_card_id')).first()
