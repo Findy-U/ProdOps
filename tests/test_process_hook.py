@@ -21,12 +21,14 @@ def test_send_payload_to_webhook(client) -> None:
         that leads to an expected error. """
 
     response = client.post('/payload', json=full_payload)
-    assert response.status_code == 400
+    assert response.status_code == 200
+    assert response.data == b'Must be the ping request'
 
 
 def test_issue_opened(client, app) -> None:
     response = client.post('/payload', json=issue_opened)
     assert response.status_code == 201
+    assert response.data == b'Resource created'
 
 
 def test_issue_closed(client) -> None:
