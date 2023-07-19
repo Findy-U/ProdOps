@@ -8,17 +8,17 @@ Se você ainda não instalou o Git, faça o download e instale-o a partir do sit
 ### 2 - Verifique as chaves SSH existentes:
 
 Primeiro, você precisa verificar se já existem chaves SSH no seu computador. Abra o Git Bash (ou Terminal no VS Code) e digite:
-'''
+```
 ls -al ~/.ssh
-'''
+```
 Isso listará todos os arquivos no seu diretório .ssh. Procure por um arquivo chamado id_rsa.pub ou id_dsa.pub. Se você não tiver um par de chaves público e privado existente, ou não quiser usar nenhum dos disponíveis para o GitHub, prossiga para a próxima etapa.
 
 ### 3 - Gere uma nova chave SSH:
 
 No terminal, cole o texto abaixo, substituindo pelo seu endereço de email do GitHub:
-'''
+```
 ssh-keygen -t ed25519 -C "seu_email@exemplo.com"
-'''
+```
 Isso cria uma nova chave SSH, usando o email fornecido como um rótulo. Quando for solicitado a "Inserir um arquivo para salvar a chave", pressione Enter. Isso aceita o local de arquivo padrão.
 
 No prompt, digite uma frase secreta segura (passphrase).
@@ -26,27 +26,27 @@ No prompt, digite uma frase secreta segura (passphrase).
 ### 4 - Adicione sua chave SSH ao ssh-agent:
 
 Primeiro, inicie o ssh-agent em segundo plano:
-'''
+```
 eval "$(ssh-agent -s)"
-'''
+```
 Se você estiver usando o Git Bash que vem com o Git para Windows, precisa usar este comando:
-'''
+```
 eval $(ssh-agent -s)
-'''
+```
 Adicione sua chave privada SSH ao ssh-agent digitando:
-'''
+```
 ssh-add ~/.ssh/id_ed25519
-'''
+```
 Para imprimir sua chave, utilize:
-'''
+```
 cat ~/.ssh/id_ed25519.pub
-'''
+```
 ### 5 - Adicione a chave SSH à sua conta do GitHub:
 
 Copie a chave pública SSH para a área de transferência. Se o arquivo da sua chave pública SSH tiver um nome diferente do código de exemplo, modifique o nome do arquivo para corresponder à sua configuração atual:
-'''
+```
 clip < ~/.ssh/id_ed25519.pub
-'''
+```
 Vá para as configurações da sua conta do GitHub. Clique em "SSH e GPG keys" e depois clique em "New SSH key" (Nova chave SSH).
 
 Dê um título descritivo (como "Laptop Pessoal" ou "Computador de Trabalho"). No campo "Key" (Chave), cole sua chave. Quando terminar, clique em "Add SSH key" (Adicionar chave SSH).
