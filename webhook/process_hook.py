@@ -55,7 +55,7 @@ def issue_reopened(parsed_issue: dict, db_instance) -> tuple:
         'Issue reopened successfully for record_id: %s',
         existing_data.record_id)
 
-    return 204
+    return '', 204
 
 
 def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
@@ -84,7 +84,7 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
             'Data updated successfully for record_id: %s',
             existing_data.record_id)
 
-        return 204
+        return '', 204
 
     else:
         logger.info(
