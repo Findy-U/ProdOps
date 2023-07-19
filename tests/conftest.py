@@ -3,7 +3,7 @@ from app import create_app
 from models.models import TestDB, db
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def app():
     # Setup
     app = create_app()
