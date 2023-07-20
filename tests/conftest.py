@@ -1,6 +1,7 @@
 import pytest
 from app import create_app
 from models.models import TestDB, db
+from models.cards import Cards
 
 
 @pytest.fixture(scope='session')
@@ -31,3 +32,19 @@ def client(app):
 @pytest.fixture()
 def runner(app):
     return app.test_cli_runner()
+
+
+@pytest.fixture(scope='session')
+def generic_card(app):
+    with app.app_context():
+        new_card = Cards(
+            card_name='Testing Cards',
+            card_description='Lorem Ipsum...')
+
+        db.session.add(new_card)
+        db.session.commit()
+
+        yield new_card
+
+        db.session.delete(new_card)
+        db.session.commit()
