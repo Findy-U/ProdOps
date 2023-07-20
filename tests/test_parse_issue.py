@@ -1,16 +1,30 @@
+#Este código define dois testes para a função parse_issue. O primeiro 
+# teste, test_parse_issue_returns_dict, verifica se a função parse_issue 
+# retorna um dicionário. 
+# O segundo teste, # test_parse_issue_returns_expected_dict, verifica 
+# se a função parse_issue # retorna o dicionário esperado. Se a função 
+# não retornar o tipo ou # o valor esperado, os testes imprimirão 
+# uma mensagem de erro. Além # disso, qualquer outra exceção que 
+# ocorra durante a execução dos testes # é capturada e sua mensagem 
+# é impressa.
+
 from payload_example.issue_example import issue
 from webhook.parse_issue import parse_issue
 import datetime
 
-# Aqui estão sendo realizados testes para a função parse_issue.
-
-# Este teste verifica se a função parse_issue retorna um dicionário.
 def test_parse_issue_returns_dict() -> None:
+    """
+    Teste para verificar se a função parse_issue retorna um dicionário.
+
+    Nesse teste, é chamada a função 'parse_issue' com o argumento 'issue'.
+    O teste verifica se o tipo do retorno é um dicionário. Se não for, 
+    o teste falha.
+    Qualquer outra exceção que ocorra durante a execução do teste também 
+    é tratada e impressa.
+    """
     print("Iniciando teste: test_parse_issue_returns_dict...")
     try:
-        # A função parse_issue é chamada com o argumento 'issue'.
         parsed_issue = parse_issue(issue)
-        # A asserção verifica se o tipo do retorno é um dicionário.
         assert type(parsed_issue) is dict
         print("Teste finalizado com sucesso!")
     except AssertionError:
@@ -18,10 +32,18 @@ def test_parse_issue_returns_dict() -> None:
     except Exception as e:
         print(f"Erro inesperado: {e}")
 
-# Este teste verifica se a função parse_issue retorna o dicionário esperado.
 def test_parse_issue_returns_expected_dict() -> None:
+    """
+    Teste para verificar se a função parse_issue retorna o dicionário 
+    esperado.
+
+    Este teste define um dicionário esperado e verifica se a função 
+    parse_issue retorna o mesmo dicionário.
+    Se o dicionário retornado não for igual ao esperado, o teste falha.
+    Qualquer outra exceção que ocorra durante a execução do teste também é 
+    tratada e impressa.
+    """
     print("Iniciando teste: test_parse_issue_returns_expected_dict...")
-    # Define o dicionário que é esperado como retorno da função.
     expected_return = {
         'project_card_id': '1793822382',
         'assignee': {
@@ -50,7 +72,6 @@ def test_parse_issue_returns_expected_dict() -> None:
     }
 
     try:
-        # A asserção verifica se o retorno da função parse_issue é igual ao dicionário esperado.
         assert parse_issue(issue) == expected_return
         print("Teste finalizado com sucesso!")
     except AssertionError:
