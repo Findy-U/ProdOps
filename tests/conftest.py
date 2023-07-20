@@ -37,6 +37,7 @@ def runner(app):
 @pytest.fixture(scope='session')
 def generic_card(app):
     with app.app_context():
+        # Setup
         new_card = Cards(
             card_name='Testing Cards',
             card_description='Lorem Ipsum...')
@@ -45,6 +46,6 @@ def generic_card(app):
         db.session.commit()
 
         yield new_card
-
+        # Teardown
         db.session.delete(new_card)
         db.session.commit()
