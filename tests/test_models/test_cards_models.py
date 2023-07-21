@@ -1,5 +1,6 @@
 from models.cards import CardAssignees, CardLabels, CardMovements
 from models.models import db
+import datetime
 
 
 def test_create_generic_card(generic_card):
@@ -26,6 +27,7 @@ def test_add_assignee_to_card(generic_card):
 def test_add_labels(generic_card):
     label = CardLabels(
         label_name='First Issue',
+        label_date_time=datetime.datetime.now(),
         card_id=generic_card.card_id
     )
 
@@ -33,7 +35,11 @@ def test_add_labels(generic_card):
     db.session.commit()
 
     assert label.card_id == generic_card.card_id
-    assert generic_card.card_labels[0].assignee_id == label.assignee_id
+    assert generic_card.card_labels[0].label_id == label.label_id
+
+    # Teardown
+    db.session.delete(label)
+    db.session.commit()
 
 
 def test_add_movements(generic_card):
