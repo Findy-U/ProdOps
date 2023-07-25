@@ -1,7 +1,14 @@
 from .models import db
 
+card_labels = db.Table(
+    db.Column('card_id', db.Integer, db.ForeignKey(
+        'card.id'), primary_key=True),
+    db.Column('label_id', db.Integer, db.ForeignKey(
+        'label.id'), primary_key=True)
+)
 
-class Cards(db.Model):
+
+class Card(db.Model):
     card_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # Possible length of a card title
     card_name = db.Column(db.String(500), nullable=False)
@@ -11,11 +18,28 @@ class Cards(db.Model):
         'CardMovements', backref='cards', lazy=True)
     card_assignees = db.relationship(
         'CardAssignees', backref='cards', lazy=True)
-    card_labels = db.relationship(
-        'CardLabels', backref='cards', lazy=True)
+    # Many-to-Many
+    card_label = db.relationship(
+        'Label',
+        secondary=card_labels,
+        lazy='subquery',
+        backref=db.backref('card', lazy=True))
 
 
-class CardMovements(db.Model):
+class Label(db.Model):
+    label_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    label_name = db.Column(db.String(200), nullable=False)
+    label_date_time = db.Column(db.DateTime)
+    # Many-to-Many
+    card_id = db.relationship(
+        'Card',
+        secondary=card_labels,
+        lazy='subquery',
+        backref=db.backref('label', lazy=True)
+    )
+
+
+class CardMovement(db.Model):
     movement_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     origin_column = db.Column(db.String(200))
     destination_column = db.Column(db.String(200))
@@ -25,19 +49,10 @@ class CardMovements(db.Model):
         'cards.card_id'))
 
 
-class CardAssignees(db.Model):
+class CardAssignee(db.Model):
     assignee_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     assignee_name = db.Column(db.String(200), nullable=False)
     assignee_date_time = db.Column(db.DateTime)
-    # Foreign Key
-    card_id = db.Column(db.Integer, db.ForeignKey(
-        'cards.card_id'))
-
-
-class CardLabels(db.Model):
-    label_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    label_name = db.Column(db.String(200), nullable=False)
-    label_date_time = db.Column(db.DateTime)
     # Foreign Key
     card_id = db.Column(db.Integer, db.ForeignKey(
         'cards.card_id'))
