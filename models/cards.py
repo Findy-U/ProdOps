@@ -18,7 +18,7 @@ class Card(db.Model):
         'CardMovements', backref='cards', lazy=True)
     card_assignees = db.relationship(
         'CardAssignees', backref='cards', lazy=True)
-    # Many-to-Many
+    # Many-to-Many ref: https://docs.sqlalchemy.org/en/20/orm/basic_relationships.html#many-to-many
     card_label = db.relationship(
         'Label',
         secondary=card_labels,

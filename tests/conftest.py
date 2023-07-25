@@ -1,7 +1,7 @@
 import pytest
 from app import create_app
 from models.models import TestDB, db
-from models.cards import Cards
+from models.cards import Card
 
 
 @pytest.fixture(scope='session')
@@ -38,7 +38,7 @@ def runner(app):
 def generic_card(app):
     with app.app_context():
         # Setup
-        new_card = Cards(
+        new_card = Card(
             card_name='Testing Cards',
             card_description='Lorem Ipsum...')
 
