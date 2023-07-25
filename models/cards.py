@@ -1,11 +1,11 @@
 from .models import db
 
-card_labels = db.Table(
-    db.Column('card_id', db.Integer, db.ForeignKey(
-        'card.id'), primary_key=True),
-    db.Column('label_id', db.Integer, db.ForeignKey(
-        'label.id'), primary_key=True)
-)
+card_labels = db.Table('card_labels',
+                       db.Column('card_id', db.Integer, db.ForeignKey(
+                           'card.id'), primary_key=True),
+                       db.Column('label_id', db.Integer, db.ForeignKey(
+                           'label.id'), primary_key=True)
+                       )
 
 
 class Card(db.Model):
@@ -23,20 +23,13 @@ class Card(db.Model):
         'Label',
         secondary=card_labels,
         lazy='subquery',
-        backref=db.backref('card', lazy=True))
+        backref=db.backref('cards', lazy=True))
 
 
 class Label(db.Model):
     label_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     label_name = db.Column(db.String(200), nullable=False)
     label_date_time = db.Column(db.DateTime)
-    # Many-to-Many
-    card_id = db.relationship(
-        'Card',
-        secondary=card_labels,
-        lazy='subquery',
-        backref=db.backref('label', lazy=True)
-    )
 
 
 class CardMovement(db.Model):
