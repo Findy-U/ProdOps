@@ -2,9 +2,9 @@ from .models import db
 
 card_labels = db.Table('card_labels',
                        db.Column('card_id', db.Integer, db.ForeignKey(
-                           'card.id'), primary_key=True),
+                           'card.card_id'), primary_key=True),
                        db.Column('label_id', db.Integer, db.ForeignKey(
-                           'label.id'), primary_key=True)
+                           'label.label_id'), primary_key=True)
                        )
 
 
