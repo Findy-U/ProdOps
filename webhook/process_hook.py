@@ -1,11 +1,3 @@
-# Este código consiste em funções para lidar com "webhooks", ou seja,
-# chamadas HTTP automáticas disparadas quando ocorre um evento específico.
-# No caso deste código, ele trata de eventos relacionados a "issues"
-# em um sistema de gerenciamento de projetos, onde as "issues" podem
-# ser criadas, editadas, reabertas, atribuídas, fechadas, reordenadas
-# ou editadas. Para cada um desses eventos, uma ação correspondente
-# é realizada no banco de dados relacionado.
-
 from models.models import Card, TestDB
 from logger.logger import logger
 from .parse_issue import parse_issue
@@ -71,13 +63,13 @@ def issue_reopened(parsed_issue: dict, db_instance) -> tuple:
 def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
     closed_at = parsed_issue["closed_at"]
     project_card_id = parsed_issue["project_card_id"]
-    assignee_login = parsed_issue["assignee_login"]  # Login do responsável.
-    created_at = parsed_issue["created_at"]  # Data de criação da issue.
+    assignee_login = parsed_issue["assignee_login"]
+    created_at = parsed_issue["created_at"]
 
-    status = 'open' if closed_at is None else 'closed'  # Status da issue.
+    status = 'open' if closed_at is None else 'closed'
 
     existing_data = db.session.query(db_instance).filter_by(
-        project_card_id=project_card_id).first()  # Dados existentes.
+        project_card_id=project_card_id).first()
 
     if existing_data:
         if assignee_login:

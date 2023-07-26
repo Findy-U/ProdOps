@@ -4,6 +4,7 @@ from logger.logger import logger
 from webhook.process_hook import process_webhook
 
 logger = logger()
+
 webhook_route = Blueprint('webhook', __name__)
 
 
@@ -14,6 +15,5 @@ def webhook() -> Response:
         abort(400)
 
     data = request.get_json()
-    # logger.info('Received webhook payload: %s', data)
 
     return process_webhook(data)

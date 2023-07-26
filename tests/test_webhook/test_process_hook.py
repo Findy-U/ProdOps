@@ -21,29 +21,27 @@ def test_send_payload_to_webhook(client) -> None:
         that leads to an expected error. """
 
     response = client.post('/payload', json=full_payload)
+
     assert response.status_code == 200
     assert response.data == b'Must be the ping request'
 
 
-# Este teste verifica se a rota '/payload' retorna o código de status esperado (201) e a resposta correta ao receber um payload de issue aberta.
 def test_issue_opened(client, app) -> None:
-    print("Enviando payload de issue aberta para a rota '/payload'...")
     response = client.post('/payload', json=issue_opened)
+
     assert response.status_code == 201
     assert response.data == b'Resource created'
 
 
-# Este teste verifica se a rota '/payload' retorna o código de status esperado (204) ao receber um payload de issue fechada.
 def test_issue_closed(client) -> None:
-    print("Enviando payload de issue fechada para a rota '/payload'...")
     response = client.post('/payload', json=issue_closed)
+
     assert response.status_code == 204
 
 
-# Este teste verifica se a rota '/payload' retorna o código de status esperado (204) ao receber um payload de issue reaberta.
 def test_issue_reopened(client) -> None:
-    print("Enviando payload de issue reaberta para a rota '/payload'...")
     response = client.post('/payload', json=issue_reopened)
+
     assert response.status_code == 204
 
 
