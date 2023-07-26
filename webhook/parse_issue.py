@@ -1,14 +1,36 @@
+# Este código define uma função, parse_issue(), que analisa uma "issue"
+# (problema) de um sistema de gerenciamento de projetos. A função
+# recebe um dicionário representando a "issue" como entrada e retorna
+# um novo dicionário contendo informações analisadas da "issue",
+# incluindo o ID do projeto, o responsável, a data de criação e a data
+# de encerramento.
+
+# Durante a análise, o código também verifica se certos campos estão
+# presentes na "issue". Se um campo necessário (como o ID da "issue"
+# ou a data de criação) estiver ausente, a função levanta uma exceção.
+# Se um campo opcional (como o responsável ou a data de fechamento)
+# estiver ausente, a função simplesmente emite um aviso e continua.
+
 from datetime import datetime, timezone
 
 
 def parse_issue(issue: dict) -> dict:
-    """ This function separates the parsing of issue dictionary from
-        the rest of the webhook code, making it easier to read. """
+    """
+    Função para analisar uma 'issue'. A análise envolve extrair
+    informações relevantes da issue,
+    incluindo o ID do projeto, o responsável, a data de criação e a
+    data de encerramento.
 
-    project_card_id = str(issue.get('id'))
-    assignee = issue.get('assignee')
-    assignee_login = None
+    :param issue: Dicionário que representa uma issue.
+    :return: Dicionário contendo as informações analisadas.
+    """
 
+    project_card_id = str(issue.get('id'))  # ID do cartão do projeto.
+
+    assignee = issue.get('assignee')  # Responsável pela issue.
+    assignee_login = None  # Login do responsável.
+
+    # Se não houver um responsável, procura na lista de responsáveis.
     if not assignee:
         assignees = issue.get('assignees')
 
@@ -29,6 +51,7 @@ def parse_issue(issue: dict) -> dict:
         closed_at = datetime.strptime(
             closed_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
 
+    # Retorna o dicionário com as informações analisadas.
     return {
         "project_card_id": project_card_id,
         "assignee": assignee,
