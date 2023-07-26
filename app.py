@@ -6,11 +6,12 @@ import os
 
 from routes.webhook import webhook_route
 
-# Inicializando o logger
+# Logger
 logger = logger()
 
 
 def create_app() -> Flask:
+    # Get all env variables
     dotenv.load_dotenv('.env')
 
     app = Flask(__name__)
@@ -27,18 +28,18 @@ def create_app() -> Flask:
 
 def register_routes(app: Flask) -> Flask:
     app.register_blueprint(webhook_route)
-
     return app
 
 
-# Criando a aplicação
 app = create_app()
+
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()
-        logger.info(
-            "Conexão com o banco de dados estabelecida e tabelas criadas com sucesso.")
-        print("Banco de dados configurado com sucesso...")
+        try:
+            db.create_all()
+            logger.info("Database connected and tables created successfully.")
+        except Exception as e:
+            logger.error(f"Error setting up database: {e}", exc_info=True)
 
     app.run(host='0.0.0.0', port=4567, debug=True)

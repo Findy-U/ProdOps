@@ -15,20 +15,12 @@ from datetime import datetime, timezone
 
 
 def parse_issue(issue: dict) -> dict:
-    """
-    Função para analisar uma 'issue'. A análise envolve extrair
-    informações relevantes da issue,
-    incluindo o ID do projeto, o responsável, a data de criação e a
-    data de encerramento.
+    """ This function separates the parsing of issue dictionary from
+        the rest of the webhook code, making it easier to read. """
 
-    :param issue: Dicionário que representa uma issue.
-    :return: Dicionário contendo as informações analisadas.
-    """
-
-    project_card_id = str(issue.get('id'))  # ID do cartão do projeto.
-
-    assignee = issue.get('assignee')  # Responsável pela issue.
-    assignee_login = None  # Login do responsável.
+    project_card_id = str(issue.get('id'))
+    assignee = issue.get('assignee')
+    assignee_login = None
 
     # Se não houver um responsável, procura na lista de responsáveis.
     if not assignee:
@@ -51,7 +43,7 @@ def parse_issue(issue: dict) -> dict:
         closed_at = datetime.strptime(
             closed_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
 
-    # Retorna o dicionário com as informações analisadas.
+    print("Parsing da issue concluído com sucesso.")
     return {
         "project_card_id": project_card_id,
         "assignee": assignee,

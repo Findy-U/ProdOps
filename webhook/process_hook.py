@@ -12,17 +12,12 @@ from .parse_issue import parse_issue
 from models.models import db
 from flask import current_app
 
-# Inicialização do logger
+# Logger
 logger = logger()
 
 
 def process_webhook(data: dict) -> tuple:
-    """
-    Função para processar webhooks.
-
-    :param data: Dicionário contendo os dados do webhook.
-    :return: Tupla contendo uma mensagem de status e um código HTTP.
-    """
+    # logger.info('Type and value of data: %s, %s', type(data), data)
     db_instance = Card
 
     # Se estiver em modo de teste, muda a instância do banco de dados.
@@ -34,10 +29,10 @@ def process_webhook(data: dict) -> tuple:
 
     if not issue:
         logger.error(
-            "Estrutura de payload inválida. Pulando o processamento do webhook.")
+            "Invalid payload structure. Skipping webhook processing.")
         db.session.close()
 
-        return 'Deve ser a solicitação ping', 200
+        return 'Must be the ping request', 200
 
     parsed_issue = parse_issue(issue)
 
@@ -49,18 +44,12 @@ def process_webhook(data: dict) -> tuple:
 
     else:
         logger.error(
-            "Ação não suportada: %s. Pulando o processamento do webhook.")
-        return 'Ação não suportada', 400
+            "Unsupported action: %s. Skipping webhook processing.")
+
+        return 'Unsupported action', 400
 
 
 def issue_reopened(parsed_issue: dict, db_instance) -> tuple:
-    """
-    Função para processar issues reabertas.
-
-    :param parsed_issue: Issue analisada.
-    :param db_instance: Instância do banco de dados a ser utilizada.
-    :return: Tupla contendo uma mensagem de status e um código HTTP.
-    """
     project_card_id = parsed_issue['project_card_id']
 
     existing_data = db.session.query(db_instance).filter_by(
@@ -73,22 +62,14 @@ def issue_reopened(parsed_issue: dict, db_instance) -> tuple:
     db.session.commit()
 
     logger.info(
-        'Issue reaberta com sucesso para record_id: %s',
+        'Issue reopened successfully for record_id: %s',
         existing_data.record_id)
 
     return '', 204
 
 
 def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
-    """
-    Função para processar a criação ou edição de issues.
-
-    :param parsed_issue: Issue analisada.
-    :param db_instance: Instância do banco de dados a ser utilizada.
-    :return: Tupla contendo uma mensagem de status e um código HTTP.
-    """
-    closed_at = parsed_issue["closed_at"]  # Data de fechamento da issue.
-    # ID do cartão do projeto.
+    closed_at = parsed_issue["closed_at"]
     project_card_id = parsed_issue["project_card_id"]
     assignee_login = parsed_issue["assignee_login"]  # Login do responsável.
     created_at = parsed_issue["created_at"]  # Data de criação da issue.
@@ -110,14 +91,14 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
 
         db.session.commit()
         logger.info(
-            'Dados atualizados com sucesso para record_id: %s',
+            'Data updated successfully for record_id: %s',
             existing_data.record_id)
 
         return '', 204
 
     else:
         logger.info(
-            'Nenhum dado existente encontrado para project_card_id: %s',
+            'No existing data found for project_card_id: %s',
             project_card_id)
 
         all_data = db_instance(
@@ -131,7 +112,7 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
         db.session.add(all_data)
         db.session.commit()
         logger.info(
-            'Dados salvos com sucesso com record_id: %s',
+            'Data saved successfully with record_id: %s',
             all_data.record_id)
 
-        return 'Recurso criado', 201
+        return 'Resource created', 201
