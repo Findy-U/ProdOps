@@ -1,4 +1,4 @@
-from models.models import Alldata, TestDB
+from models.models import Card, TestDB
 from logger.logger import logger
 from .parse_issue import parse_issue
 from models.models import db
@@ -10,7 +10,7 @@ logger = logger()
 
 def process_webhook(data: dict) -> tuple:
     # logger.info('Type and value of data: %s, %s', type(data), data)
-    db_instance = Alldata
+    db_instance = Card
 
     if current_app.config["TESTING"]:
         db_instance = TestDB
