@@ -1,177 +1,201 @@
 .header {
-    background-color: #333333;
-    padding: 20px;
-  }
-  
-  .text-center {
-    text-align: center;
-  }
-  
-  .text-center h1 {
-    color: #008000;
-    font-size: 4.5vw;
-    margin-bottom: 2.5vw;
-    font-family: Orbitron;
-  }
-  
-  .text-center h2 {
-    color: #008000;
-    font-size: 3.0vw;
-    font-weight: bold;
-    margin-top: 1.5vw;
-    font-family: Orbitron;
-  }
-  
-  .text-center h3 {
-    color: #008000;
-    font-size: 1.8vw;
-    text-decoration: underline;
-    padding: 0.5vw;
-    font-family: Orbitron;
-  }
-  
-  .lead.text-center {
-    color: #008000;
-    font-size: 3.0vw;
-    margin-top: 10px;
-    font-family: Orbitron;
-  }
-  
-  .my-legend {
-    font-size: 1.8vw;
-    color: #008000;
-    font-family: Orbitron;
-  }
-  
-  .label1 {
-    color: #008000;
-    font-size: 1.2vw;
-    font-family: Orbitron;
-  }
-  
-  .label2 {
-    color: #008000;
-    font-size: 1.0vw;
-    font-family: Orbitron;
-  }
-  
-  .btn.btn-primary {
-    margin-bottom: 20px;
-    background-color: black;
-    color: #008000;
-    border-radius: 5px;
-    border: 1px solid #006400;
-    padding: 10px 20px;
-    font-size: 2.0vw;
-    font-family: Orbitron;
-  }
-  
-  .card {
-    padding: 10px;
-    width: 100%;
-    border: 4px solid #003366;
-    background-color: #222222;
-    font-family: Orbitron;
-  }
-  
-  .card2 {
-    padding: 10px;
-    width: 100%;
-    border: 4px solid #008000;
-    background-color: #444444;
-    font-family: Orbitron;
-  }
-  
-  .card-header {
-    background-color: black;
-    color: #008000;
-    font-family: Orbitron;
-  }
-  
-  .card-title {
-    color: #008000;
-    font-family: Orbitron;
-  }
-  
-  .card-text {
-    color: #008000;
-    font-family: Orbitron;
-  }
-  
-  .div_highlight {
-    max-width: 75px;
-    height: 100px;
-    margin-left: -10px;
-    font-family: Orbitron;
-  }
-  
-  .row_highlight {
-    margin-top: 10px;
-    font-family: Orbitron;
-  }
-  
-  .col_highlight {
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #333333;
-    border: 1px solid #00FF00;
-    border-radius: 5px;
-    height: 1080px;
-    font-family: Orbitron;
-  }
-  
-  
-  .graph-container {
-    height: 400px;
-    background-color: #222222;
-    color: #008000;
-    font-family: Arial, sans-serif;
-    font-size: 1.8vw;
-    text-align: center;
-    margin: 2px;
-    padding: 10px;
-    border: 4px solid #003366;
-    border-radius: 5px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-    font-family: Orbitron;
-  }
-  
-  .dropdown {
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 1.8vw;
-    padding: 5px;
-    border: 1px solid #008000;
-    border-radius: 5px;
-    background-color: #222222;
-    color: #008000;
-    font-family: Orbitron;
-  }
-  
-  .form-control {
-    width: 100%;
-    margin-bottom: 1px;
-    font-size: 1.8vw;
-    padding: 1px;
-    border: 1px solid #008000;
-    border-radius: 5px;
-    background-color: #222222;
-    color: #008000;
-    font-family: Orbitron;
-  }
-  
-  .form-check-input {
-    margin-right: 2px;
-    margin-bottom: 2px;
-    font-size: 1.8vw;
-    color: #008000;
-    width: 100%;
-    height: 100%;
-    line-height: 20px;
-    background-color: #222222;
-    border: 2px solid #008000;
-    border-radius: 5px;
-    color: #008000;
-    font-family: Orbitron;
-  }
-  
+  background-color: #333333;
+  color: #008000;
+  padding: 20px;
+  text-align: left;
+  font-family: 'Roboto', sans-serif;
+}
+
+.text_p {
+  text-align: center;
+  color: #008000;
+  font-size: 1.5vw;
+  font-family: 'Roboto', sans-serif;
+}
+
+.text-center h1 {
+  text-align: center;
+  color: #008000;
+  font-size: 6vw;
+  margin-bottom: 2.5vw;
+  font-family: 'Roboto', sans-serif;
+}
+
+.text-center h2 {
+  text-align: center;
+  color: #008000;
+  font-size: 3.0vw;
+  font-weight: bold;
+  margin-top: 1.5vw;
+  font-family: 'Roboto', sans-serif;
+}
+
+.text-center h3 {
+  text-align: center;
+  color: #008000;
+  font-size: 1.8vw;
+  text-decoration: underline;
+  padding: 0.5vw;
+  font-family: 'Roboto', sans-serif;
+}
+
+.lead.text-center {
+  text-align: center;
+  color: #008000;
+  font-size: 3.0vw;
+  margin-top: 10px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.my-legend {
+  text-align: center;
+  font-size: 1.8vw;
+  color: #008000;
+  font-family: 'Roboto', sans-serif;
+}
+
+.label1 {
+  color: #008000;
+  font-size: 1.2vw;
+  font-family: 'Roboto', sans-serif;
+}
+
+.label2 {
+  color: #008000;
+  font-size: 1.0vw;
+  font-family: 'Roboto', sans-serif;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10%;
+  background-color: #222222;
+  color: #008000;
+  border-radius: 5px;
+  border: 2px solid #006400;
+  padding: 10px 20px;
+  font-size: 2.0vw;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.card {
+  padding: 10px;
+  width: 100%;
+  color: #008000;
+  border: 4px solid #363636;
+  background-color: #222222;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.card2 {
+  padding: 2px;
+  width: 100%;
+  height: 100%; /* Defina a altura desejada */
+  border: 4px solid #008000;
+  background-color: #444444;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-header {
+  background-color: #444444;
+  color: #008000;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.card-title {
+  color: #008000;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.card-text {
+  color: #008000;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.div_highlight {
+  max-width: 75px;
+  height: 100px;
+  margin-left: -10px;
+  background-color: #444444;
+  border: 4px solid #008000;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.row_highlight {
+  margin-top: 10px;
+  background-color: #444444;
+  border: 4px solid #008000;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.col_highlight {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #333333;
+  border: 1px solid #008000;
+  border-radius: 5px;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.graph-container {
+  height: 400px;
+  background-color: #222222;
+  color: #008000;
+  font-size: 1.8vw;
+  text-align: center;
+  margin: 2px;
+  padding: 10px;
+  border: 4px solid #363636;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+}
+
+.dropdown {
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 1.8vw;
+  padding: 5px;
+  border: 1px solid #008000;
+  border-radius: 5px;
+  background-color: #222222;
+  color: #008000;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}
+
+.form-control {
+  width: 100%;
+  margin-bottom: 1px;
+  font-size: 1.8vw;
+  padding: 1px;
+  border: 1px solid #008000;
+  border-radius: 5px;
+  background-color: #222222;
+  color: #008000;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+}

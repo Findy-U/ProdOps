@@ -1,7 +1,12 @@
 import os
+import pandas as pd
+import numpy as np
 import dash
 import dash_bootstrap_components as dbc
 from components.layouts import dashboard_layout
+import matplotlib.pyplot as plt
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 
 # Obtém o caminho completo para o arquivo styles.css
 css_path = os.path.join(os.path.dirname(__file__), 'assets/css/styles.css')
