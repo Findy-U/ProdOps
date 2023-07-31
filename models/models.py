@@ -12,10 +12,10 @@ class Card(db.Model):
     __tablename__ = 'card'
 
     record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime)
     closed_at = db.Column(db.DateTime, nullable=True)
     project_card_id = db.Column(db.Text)
-    status = db.Column(db.Text)
+    status = db.Column(db.Text)  # Open, Closed or Reopened
     assignee = db.Column(db.Text)
 
 
