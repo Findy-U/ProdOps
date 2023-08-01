@@ -1,9 +1,0 @@
-Collecting jsonschema
-  Using cached jsonschema-4.17.3-py3-none-any.whl (90 kB)
-Collecting attrs>=17.4.0 (from jsonschema)
-  Using cached attrs-23.1.0-py3-none-any.whl (61 kB)
-Collecting pyrsistent!=0.17.0,!=0.17.1,!=0.17.2,>=0.14.0 (from jsonschema)
-  Downloading pyrsistent-0.19.3-cp39-cp39-win_amd64.whl (62 kB)
-     -------------------------------------- 62.7/62.7 kB 558.2 kB/s eta 0:00:00
-Installing collected packages: pyrsistent, attrs, jsonschema
-Successfully installed attrs-23.1.0 jsonschema-4.17.3 pyrsistent-0.19.3
