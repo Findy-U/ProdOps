@@ -65,6 +65,7 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
     project_card_id = parsed_issue["project_card_id"]
     assignee_login = parsed_issue["assignee_login"]
     created_at = parsed_issue["created_at"]
+    repository_url = parsed_issue["repository_url"]
 
     status = 'open' if closed_at is None else 'closed'
 
@@ -98,7 +99,8 @@ def issue_create_or_edit(parsed_issue: dict, db_instance) -> tuple:
             created_at=created_at,
             closed_at=closed_at,
             status=status,
-            assignee=assignee_login
+            assignee=assignee_login,
+            repository=repository_url
         )
 
         db.session.add(all_data)
