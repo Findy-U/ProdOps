@@ -3,9 +3,13 @@ from dash import dcc, html
 import plotly.express as px
 import pandas as pd
 from components import helper_functions as hf
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 
 # Dados de exemplo
-df = pd.read_csv('database\Data.csv')
+#df = pd.read_csv('ProdOps\database\Data.csv')
+df = hf.extract_data()
+print(df.head())
 
 ######### Estilos das Classes #########
 
@@ -13,19 +17,19 @@ df = pd.read_csv('database\Data.csv')
 class_layout1 = "header"
 
 # Cabeçalho
-class_h1 = "text-center"
-class_h2 = "text-center"
-class_h3 = "text-center"
+class_h1 = "text-center h1"
+class_h2 = "text-center h2"
+class_h3 = "text-center h3"
 
 # Conteúdo
-class_p1 = "lead text-center"
+class_p1 = "text-p"
 class_l1 = "my-legend"
 # Label
 class_label1= "label1"
 class_label2= "label2"
 
 # Botão
-class_button = "btn btn-primary"
+class_button = "button"
 
 # Card
 class_card = "card"
@@ -56,43 +60,22 @@ class_checklist = "form-check-input"
 
 DF_main = hf.transform_data(df)
 
-DF_ind_pessoal = hf.df_ind_pessoal(DF_main)
+DF_ind = DF_main.copy()
 
-DF_ind_tarefas = hf.df_ind_tarefas(DF_main)
+DF_ind = hf.df_ind(DF_ind)
 
+# Criação de Indicadores
+
+DF_ind_pessoal = hf.df_ind_pessoal(DF_ind)
 
 ######### Layout do Dashboard #########
 
 layout = dbc.Container(
     fluid=True,
     children=[
-        ######### Cabeçalho #########
-        dbc.Container(
-            fluid=True,
-            children=[
-                dbc.Row(
-                    dbc.Col(
-                        html.H1(
-                            "Dashboard de Projetos do GitHub",
-                            className=class_h1,
-                        ),
-                        width=12
-                    )
-                ),
-                dbc.Row(
-                    dbc.Col(
-                        html.P(f"Última atualização: {pd.to_datetime('today').strftime('%Y-%m-%d')}",
-                               className=class_p1,
-                               
-                               )
-                    )
-                )
-            ],
-            className=class_layout1,
-            
-        ),
-
-        ######### Conteúdo do Dashboard #########
+        
+        
+        ######### Dashboard #########
         dbc.Container(
             fluid=True,
             children=[
@@ -105,7 +88,6 @@ layout = dbc.Container(
                                     "Atualizar",
                                     id="Atualizar",
                                     className=class_button,
-                                    
                                 ),
                                 
                                 ######### Filtro dropdown #########
@@ -202,28 +184,44 @@ layout = dbc.Container(
                         ######### Indicadores #########
                         dbc.Col(
                             [
+                                ######### Cabeçalho #########
+                                dbc.Row(
+                                    [
+                                    dbc.Col(
+                                        html.H1(
+                                            "Desempenho",
+                                            className=class_h1,
+                                        ),
+                                        width=10
+                                    ),
+                                    dbc.Col(
+                                        html.P(f"Última atualização: {pd.to_datetime('today').strftime('%Y-%m-%d')}",
+                                            className=class_p1,
+                                            ),
+                                            width=2
+                                    )
+                                    ]
+                                
+                                ),
+                
                                 ######### Valores únicos #########
                                 dbc.Row(
                                     [
                                         dbc.Col(
-                                            dbc.Card(
-                                                [
-                                                    dbc.CardHeader("Tempo Médio de Fechamento de Cartões (TAF)",
-                                                                   className=class_card_header,
-                                                                   ),
-                                                    dbc.CardBody(
-                                                        [
-                                                            html.H3("5 dias", className=class_card_title,
-                                                                    ),
-                                                            html.P("↑", className=class_card_text, 
-                                                                   ),
-                                                        ]
-                                                    ),
-                                                ],
-                                                className=class_card,
-                                                
-                                            ),
-                                            width=3,
+                                            hf.create_card("Productivity", hf.productivity(DF_ind_pessoal), ""),
+                                            width=3
+                                        ),
+                                        dbc.Col(
+                                            hf.create_card("Batata", hf.productivity(DF_ind_pessoal), ""),
+                                            width=3
+                                        ),
+                                        dbc.Col(
+                                            hf.create_card("WIP (Work in Progress)", hf.wip(DF_ind), ""),
+                                            width=3
+                                        ),
+                                        dbc.Col(
+                                            hf.create_card("Stale Work", hf.stale_work(DF_ind), "↑"),
+                                            width=3
                                         ),
                                     ],
                                     className=class_row,
@@ -231,19 +229,50 @@ layout = dbc.Container(
                                     align="center",
                                 ),
                                 
-                                ######### Gráficos #########
+                                ######### Gráficos Superiores #########
                                 dbc.Row(
                                     [
                                         dbc.Col(
                                             [
-                                                dcc.Graph(figure=hf.plot_status_histogram(DF_main),
+                                                dcc.Graph(figure=hf.plot_histogram_status(DF_main),
                                                 className=class_graph,
                                                          )
                                             ],
-                                            width=12
+                                            width=6
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Graph(figure=hf.plot_histogram_status(DF_main),
+                                                className=class_graph,
+                                                        )
+                                            ],
+                                            width=6,
+                                        )
+                                    ]
+                                ),
+                                
+                                ######### Gráficos Inferiores #########
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dcc.Graph(figure=hf.plot_histogram_blocked_vs_unblocked(DF_main),
+                                                className=class_graph,
+                                                        )
+                                            ],
+                                            width=6
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                dcc.Graph(figure=hf.plot_histogram_blocked_vs_unblocked(DF_main),
+                                                className=class_graph,
+                                                        )
+                                            ],
+                                            width=6
                                         )
                                     ]
                                 )
+                            
                             ],
                             className=class_col,
                             width=10
