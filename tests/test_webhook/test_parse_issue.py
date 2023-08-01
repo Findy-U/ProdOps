@@ -15,6 +15,7 @@ def test_parse_issue_returns_expected_dict() -> None:
                                     'subscriptions_url': 'https://api.github.com/users/Demian143/subscriptions', 'organizations_url': 'https://api.github.com/users/Demian143/orgs', 'repos_url': 'https://api.github.com/users/Demian143/repos', 'events_url': 'https://api.github.com/users/Demian143/events{/privacy}', 'received_events_url': 'https://api.github.com/users/Demian143/received_events', 'type': 'User', 'site_admin': False},
                        'assignee_login': None,
                        'created_at': datetime.datetime(2023, 7, 7, 16, 24, 5, tzinfo=datetime.timezone.utc),
-                       'closed_at': None}
+                       'closed_at': None,
+                       "repository_url": "https://api.github.com/repos/Findy-U/ProdOps"}
 
     assert parse_issue(issue) == expected_return

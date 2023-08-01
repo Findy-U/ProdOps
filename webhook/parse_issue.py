@@ -43,11 +43,13 @@ def parse_issue(issue: dict) -> dict:
         closed_at = datetime.strptime(
             closed_at, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
 
-    print("Parsing da issue concluído com sucesso.")
+    repository_url = issue.get('repository_url')
+
     return {
         "project_card_id": project_card_id,
         "assignee": assignee,
         "assignee_login": assignee_login,
         "created_at": created_at,
-        "closed_at": closed_at
+        "closed_at": closed_at,
+        "repository_url": repository_url
     }
