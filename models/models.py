@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -12,11 +11,13 @@ class Card(db.Model):
     __tablename__ = 'card'
 
     record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    created_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, nullable=False)
     closed_at = db.Column(db.DateTime, nullable=True)
-    project_card_id = db.Column(db.Text)
-    status = db.Column(db.Text)  # Open, Closed or Reopened
-    assignee = db.Column(db.Text)
+    project_card_id = db.Column(db.Text, nullable=False)
+    status = db.Column(db.Text, nullable=False)  # Open, Closed or Reopened
+    assignee = db.Column(db.Text, nullable=True)
+    # New colums
+    repository = db.Column(db.Text, nullable=False)
 
 
 class TestDB(db.Model):
@@ -24,8 +25,10 @@ class TestDB(db.Model):
     __tablename__ = 'test_db'
 
     record_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False)
     closed_at = db.Column(db.DateTime, nullable=True)
-    project_card_id = db.Column(db.Text)
-    status = db.Column(db.Text)
-    assignee = db.Column(db.Text)
+    project_card_id = db.Column(db.Text, nullable=False)
+    status = db.Column(db.Text, nullable=False)  # Open, Closed or Reopened
+    assignee = db.Column(db.Text, nullable=True)
+    # New colums
+    repository = db.Column(db.Text, nullable=False)
