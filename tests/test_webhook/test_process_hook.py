@@ -26,7 +26,7 @@ def test_send_payload_to_webhook(client) -> None:
     assert response.data == b'Must be the ping request'
 
 
-def test_issue_opened(client, app) -> None:
+def test_issue_opened(client) -> None:
     response = client.post('/payload', json=issue_opened)
 
     assert response.status_code == 201
